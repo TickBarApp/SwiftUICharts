@@ -141,7 +141,7 @@ internal struct LineChartColoursSubView<CD, DS>: View where CD: CTLineChartDataP
             })
             .background(Color(.gray).opacity(0.000000001))
             .if(chartData.viewData.hasXAxisLabels) { $0.xAxisBorder(chartData: chartData) }
-            .if(chartData.viewData.hasYAxisLabels) { $0.yAxisBorder(chartData: chartData) }
+            //.if(chartData.viewData.hasYAxisLabels) { $0.yAxisBorder(chartData: chartData) }
             .animateOnAppear(disabled: chartData.disableAnimation, using: chartData.chartStyle.globalAnimation) {
                 self.startAnimation = true
             }

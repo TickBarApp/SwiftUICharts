@@ -29,15 +29,18 @@ import SwiftUI
  .legends(chartData: data)
  ```
  */
-public struct PieChart<ChartData>: View where ChartData: PieChartData {
+public struct PieChart<ChartData, S: ShapeStyle>: View where ChartData: PieChartData {
     
     @ObservedObject private var chartData: ChartData
     @State private var timer: Timer?
+    public var fillShape: ((PieChartDataPoint) -> S)
     
     /// Initialises a bar chart view.
     /// - Parameter chartData: Must be PieChartData.
-    public init(chartData: ChartData) {
+    /// - Parameter fill: Callback function to fill the underliying shape
+    public init(chartData: ChartData, fillShape: @escaping ((PieChartDataPoint) -> S)) {
         self.chartData = chartData
+        self.fillShape = fillShape
     }
     
     @State private var startAnimation: Bool = false
@@ -49,7 +52,7 @@ public struct PieChart<ChartData>: View where ChartData: PieChartData {
                     PieSegmentShape(id: chartData.dataSets.dataPoints[data].id,
                                     startAngle: chartData.dataSets.dataPoints[data].startAngle,
                                     amount: chartData.dataSets.dataPoints[data].amount)
-                        .fill(chartData.dataSets.dataPoints[data].colour)
+                    .fill(self.fillShape(self.chartData.dataSets.dataPoints[data]))
                         .overlay(dataPoint: chartData.dataSets.dataPoints[data], chartData: chartData, rect: geo.frame(in: .local))
                         .scaleEffect(animationValue)
                         .opacity(Double(animationValue))
@@ -83,3 +86,4 @@ public struct PieChart<ChartData>: View where ChartData: PieChartData {
         }
     }
 }
+
